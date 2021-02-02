@@ -2,9 +2,17 @@ package com.educandoweb.course.entities;
 
 import java.io.Serializable;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity //anotação para especificar que essa classe é uma entidade
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
+	@Id //estamos dizendo que o atributo id é uma chave-primaria
+	@GeneratedValue (strategy = GenerationType.IDENTITY) //estamos dizendo que o id é auto_increment
 	private Long id;
 	private String name;
 	private String email;
