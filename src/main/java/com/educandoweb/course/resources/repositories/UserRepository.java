@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.educandoweb.course.entities.User;
 
+//@Repository, poderia deixar essa anotação, mas como a interface ja herda do JpaRepositoy, então automaticamente essa classe ja esta registrada
 public interface UserRepository  extends JpaRepository<User, Long> {
  //essa interface herda todos os recursos do Repository que o usuario tem, então essa interface sera responsavel por
 //fazer operações com o objeto "User".
