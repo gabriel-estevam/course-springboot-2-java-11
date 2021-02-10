@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity //anotação para especificar que essa classe é uma entidade
 @Table(name = "tb_user") //mantendo a boa pratica, vamos dizer que essa classe, no banco dados, se chamara "tb_user"
 public class User implements Serializable {
@@ -29,6 +31,7 @@ public class User implements Serializable {
 	 * então sera feito um mapemento
 	 *  */
 	
+	@JsonIgnore //usamos essa anotação para indicar ao json que ele tem uma relação com o client, se não tiver essa anotação vai gerar erro
 	@OneToMany(mappedBy = "client")
 	private List<Order> orders = new ArrayList<>(); //Relacionamento - um cliente tem varios pedidos
 	

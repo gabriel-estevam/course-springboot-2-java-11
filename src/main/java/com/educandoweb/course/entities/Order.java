@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 @Table(name = "tb_order") //no banco de dados essa classe se chamara "tb_order", pois order é uma palavra reservada do SQL
 public class Order implements Serializable
@@ -20,6 +22,8 @@ public class Order implements Serializable
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd 'T' HH:mm:ss 'Z'", timezone = "GMT")
 	private Instant moment; //para trabalhar com datas, ficou disponivel apartir da versão java 8
 	
 	/*a anotação ManyToOne indica que um client (classe User) tem muitos pedidos (classe Order)
