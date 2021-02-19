@@ -8,8 +8,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 @Entity
 @Table(name = "tb_product")
@@ -26,10 +28,14 @@ public class Product implements Serializable
 	private Double price;
 	private String imgUrl;
 	
-	//a anotação abaixo é provisorio, pois o JPA não reconhece o tipo Set (Could not determine type for: java.util.Set, at table: tb_product, for columns)
-	@Transient 
-	private Set<Category> categories = new HashSet<>();
-	
+	//associção muitos para muitos
+	@ManyToMany
+	@JoinTable(name = "tb_product_category", //no joinTable vamos informar qual o nome da tabela la no banco de dados 
+	joinColumns = @JoinColumn(name = "product_id"), //joinColumns atributo que recebe a anotação JPA onde informamos o nome da FK do Produto
+	inverseJoinColumns = @JoinColumn(name = "category_id")) //inverseJoinColumns atributo que recebe a FK da outra entidade (category)
+	private Set<Category> categories = new HashSet<>(); //aqui vamos criar um atributo do tipo Set (interface)
+//pois o Set representa um conjunto, o Set vai garantir que o mesmo produto tenha mesma categoria mais de uma vez
+//estamos instanciando uma classe correspondente a interface Set para garantir que o atributo comece com nulo
 	public Product() {
 	}
 

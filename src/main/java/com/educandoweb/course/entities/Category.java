@@ -8,8 +8,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "tb_category")
@@ -21,8 +23,8 @@ public class Category  implements Serializable
 	private Long id;
 	private String name;
 	
-	//a anotação abaixo é provisorio, pois o JPA não reconhece o tipo Set (Could not determine type for: java.util.Set, at table: tb_product, for columns)
-	@Transient 
+	@JsonIgnore //anotação Json para que não entre em loopping ao retornar (GET) os objetos
+	@ManyToMany(mappedBy = "categories") //anotação para mepear (JPA) os objetos da entidade Produto
 	private Set<Product> products = new HashSet<>();
 	
 	public Category() {
