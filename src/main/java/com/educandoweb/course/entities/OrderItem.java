@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import com.educandoweb.course.entities.pk.OrderItemPK;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "tb_order_item") //nome da tabela no banco de dados
@@ -14,8 +15,10 @@ public class OrderItem implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 	
-	@EmbeddedId //anotação que indica que o atributo é uma chave composta
-	private OrderItemPK id; //atributo identificador da item-pedido
+	//anotação que indica que o atributo é uma chave composta
+	@EmbeddedId 
+	private OrderItemPK id = new OrderItemPK(); //atributo identificador da item-pedido,
+	//sempre devemos intanciar se não ele começa como nulo e vai gerar o erro nullPointerException
 	
 	private Integer quantity;
 	private Double price;
@@ -31,6 +34,9 @@ public class OrderItem implements Serializable
 		this.price = price;
 	}
 	
+
+//calocado a anotação do jsonIgone nesse metodo pois é ele que retornar
+	@JsonIgnore 
 	public Order getOrder() {
 		return id.getOrder();
 	}
