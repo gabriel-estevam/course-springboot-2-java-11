@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.educandoweb.course.entities.enums.OrderStatus;
@@ -49,6 +51,12 @@ public class Order implements Serializable
 	//então estamos mapeando o atributo da classe OrderItem que tem o pedido (order)
 	@OneToMany(mappedBy = "id.order")
 	private Set<OrderItem> items = new HashSet<>(); //atributo para retornar os itens do pedido
+	
+	/*mapeamento um para um com o payment(pagamento), passamos como parametro - mappedBy informando o atributo
+	/da classe payment, o segundo parametro, cascade, é obrigatorio coloca-lo pois ele vai unir o id da classe
+	 * payment com essa classe*/ 
+	@OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+	private Payment payment;
 	
 	public Order() {
 	}
@@ -106,6 +114,14 @@ public class Order implements Serializable
 		return items;
 	}
 	
+	public Payment getPayment() {
+		return payment;
+	}
+
+	public void setPayment(Payment payment) {
+		this.payment = payment;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

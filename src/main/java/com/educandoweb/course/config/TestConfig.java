@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Profile;
 import com.educandoweb.course.entities.Category;
 import com.educandoweb.course.entities.Order;
 import com.educandoweb.course.entities.OrderItem;
+import com.educandoweb.course.entities.Payment;
 import com.educandoweb.course.entities.Product;
 import com.educandoweb.course.entities.User;
 import com.educandoweb.course.entities.enums.OrderStatus;
@@ -91,5 +92,14 @@ public class TestConfig implements CommandLineRunner {
 		OrderItem oi4 = new OrderItem(o3, p5, 2, p5.getPrice()); 
 		
 		orderItemRepository.saveAll(Arrays.asList(oi1,oi2,oi3,oi4));
+		/*Inserindo um pagamento para o Order o1, pois o status dele esta como PAID
+		 * para isso instanciamentos um Payment usando o construtor com argumentos, passando o id
+		 como nulo, o instant sendo duas horas depois, indica que foi pago duas horas de pois e por
+		 uiltimo o objeto que esta com status pago*/
+		Payment pay1 = new Payment(null,Instant.parse("2019-06-20T21:53:07Z"), o1);
+		o1.setPayment(pay1); /*Ao inves de passar um repository para o Payment, vamos setar ele
+		direto no Order "o1" passando como paramento o pay1 - objeto pagamento*/
+		
+		orderRepository.save(o1); //salva novamente o pedido
 	}
 }
