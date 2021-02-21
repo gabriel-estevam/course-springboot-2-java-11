@@ -11,7 +11,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "tb_product")
@@ -36,6 +39,11 @@ public class Product implements Serializable
 	private Set<Category> categories = new HashSet<>(); //aqui vamos criar um atributo do tipo Set (interface)
 //pois o Set representa um conjunto, o Set vai garantir que o mesmo produto tenha mesma categoria mais de uma vez
 //estamos instanciando uma classe correspondente a interface Set para garantir que o atributo comece com nulo
+	
+	//estamos mapeando o id do Produto que esta na associado na classe OrderItem
+	@OneToMany(mappedBy = "id.product")
+	private Set<OrderItem> items = new HashSet<>(); //atributo que tem uma coleção de orderItems (item pedido)
+//atraves desse orderItem vamos acessar os pedidos associados a esse Produto	
 	public Product() {
 	}
 
@@ -90,7 +98,22 @@ public class Product implements Serializable
 	public Set<Category> getCategories() {
 		return categories;
 	}
-
+	
+	//anotação para não gerar o loop na retorno da request
+	@JsonIgnore
+	public Set<Order> getOrders() {
+	//esse metodo vai retorna uma lista de pedidos (order) e NÃO item pedido (orderItem)
+		
+		Set<Order> set = new HashSet<>(); //variavel que vai armazenar o pedido associado a essa Produto
+		for(OrderItem x : items) {
+		// Esse foreach vai percorrer a lista/coleção de OrderItems e para cada orderItem pegamos o Order (Pedido) associado
+		//Para descobrir e retorna o pedido (Order) associado ao Produto, temos que acessar
+		//a classe OrderItem e de la puxar o Pedido atraves do metodo getOrder da classe OrderItem
+			set.add(x.getOrder()); //adiciona na variavel acima o Pedido que o OrderItem esta associado
+		}
+		return set; //retorna a coleção de Pedidos (Order).
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
