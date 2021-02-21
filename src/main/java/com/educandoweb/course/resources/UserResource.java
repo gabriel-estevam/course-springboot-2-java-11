@@ -1,13 +1,17 @@
 package com.educandoweb.course.resources; //essa camada é responsavel pelo funcionamento dos Restcontrollers da aplicação
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.educandoweb.course.entities.User;
 import com.educandoweb.course.services.UserService;
@@ -41,4 +45,24 @@ public class UserResource {
 		return ResponseEntity.ok().body(obj);
 	}
 	
+	//anotação para inserir um usuario no banco de dados, no caso de inserção usamos o metodo POST
+	//ao usar essa anotação estamos dizendo que o metodo vai receber o metodo POST do HTTP
+	@PostMapping
+	public ResponseEntity<User> insert(@RequestBody User obj) 
+	{
+		/*metodo para inserir um  usuario no banco de dados (objeto), tem como
+		 * parametro uma objeto do tipo User, o parametro utiliza a anotação RequestBody, 
+		 * significa que ele vai receber informações no formato JSON, 
+		 * exemplo:{id: 3, name:"Jose", phone:1234434"}*/
+		obj = service.insert(obj); //o objeto do parametro recebe o resultado do Service fazendo a inseração
+		/*Quando fazemos a inserção no banco de dados, é adequado termos como resposta o codigo
+		 * 201 do HTTP, ele indica que foi inserido um novo recurso, esse codigo visualizamos la no PostMan
+		 * As linhas abaixo fazem essa configuração*/
+		
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+				.path("/{id}").buildAndExpand(obj.getId()).toUri(); //variavel que guarda o endereço de inserção (url do browser)
+		//detalhe so estamos fazendo a configuração acima pois, para retorna o codigo 201 vamos chamar o metodo created abaixo
+		//essa metodo espera como parametro uma URI
+		return ResponseEntity.created(uri).body(obj); //retorna objeto inserido (body) mais o codigo de inseração 201 (created)
+	}
 }

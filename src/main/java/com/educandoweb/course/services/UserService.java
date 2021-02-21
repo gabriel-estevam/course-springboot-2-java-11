@@ -31,5 +31,9 @@ public class UserService {
 		return obj.get();
 	}
 	
+	public User insert(User obj) {
+		//metodo para salvar no banco de dados,
+		return repository.save(obj); //retorna o usuário salvo
+	}
 }
 
