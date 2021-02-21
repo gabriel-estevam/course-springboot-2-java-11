@@ -121,7 +121,23 @@ public class Order implements Serializable
 	public void setPayment(Payment payment) {
 		this.payment = payment;
 	}
-
+	
+	//na plataforma java EE o que vale (funciona) é o "get"
+	public Double getTotal() {
+	/*metodo que devolve o total de um pedido, para 
+	 * retornar um total do Pedido (order) ele é a soma de todos os itens
+	 * a a ele associado (OrderItem)*/
+		double sum = 0.0; //variavel que vai guardar a soma dos itens do pedido
+		for(OrderItem x : items) {
+		/*Para somar todos os itens, sera necessario correr todos 
+		 * a coleção de OrderItem associado nessa classe, aqui estamos usando o foreach
+		 * para fazer isso*/	
+			sum += x.getSubTotal(); //para cada item que ele encotrar somamos, x vai pegar o valor
+		//do metodo da classe OrderItem
+		}
+		return sum; //retorna o valor final
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

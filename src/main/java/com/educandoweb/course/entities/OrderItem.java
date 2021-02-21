@@ -68,7 +68,13 @@ public class OrderItem implements Serializable
 	public void setPrice(Double price) {
 		this.price = price;
 	}
-
+	
+	//na plataforma java EE o que vale (funciona) é o "get"
+	public Double getSubTotal() {
+		//metodo para retornar o sub-total do pedido
+		return price * quantity; //valor do produto * a quantidade
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

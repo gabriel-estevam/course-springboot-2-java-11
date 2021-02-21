@@ -11,6 +11,8 @@ import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /*No diagrama orientado a objeto o Payment, essa classe, é uma classe dependente do Order (pedido)*/
 @Entity 
 @Table(name = "tb_payment")
@@ -24,6 +26,7 @@ public class Payment implements Serializable
 	private Instant moment;
 	
 	//associação um para um com o Pedido, usado o MapsId pois essa classe é dependente
+	@JsonIgnore
 	@OneToOne
 	@MapsId
 	private Order order;
