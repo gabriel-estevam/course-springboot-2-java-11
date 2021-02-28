@@ -32,13 +32,31 @@ public class UserService {
 	}
 	
 	public User insert(User obj) {
-		//metodo para salvar no banco de dados,
+	//metodo para salvar no banco de dados,
 		return repository.save(obj); //retorna o usuário salvo
 	}
 	
 	public void delete(Long id) {
-		//metodo para deletar um usuario do banco de dados pelo seu id
+	//metodo para deletar um usuario do banco de dados pelo seu id
 		repository.deleteById(id);
+	}
+	
+	public User update(Long id, User obj) {
+	//Metodo para atualizar um usuario, tem como parametro um id e um objeto do tipo User
+		User entity = repository.getOne(id); /*declarado essa variavel que sera nossa entidade
+		monitorada pelo JPA, recebe o repositoy.getOne(id) que chama a função getOne - esse metodo
+		instancia um usuário, porem ele não acessa o banco de dados ainda, isto é ele vai deixar
+		um objeto JPA monitorando, e em seguida efetuar uma operação com o banco de dados*/
+		updateData(entity, obj); //função para atualizar os dados do entity
+		return repository.save(entity); //salva o objeto
+	}
+
+	private void updateData(User entity, User obj) {
+		//metodo para atualizar os dados da entidade, com base
+		//com que chegou do obj do parametro
+		entity.setName(obj.getName());
+		entity.setEmail(obj.getEmail());
+		entity.setPhone(obj.getPhone());
 	}
 }
 

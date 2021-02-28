@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -68,10 +69,19 @@ public class UserResource {
 	}
 	
 	@DeleteMapping(value = "/{id}") //anotação do spring boot para deletar
-	public ResponseEntity<Void> delete(@PathVariable Long id) {
+	public ResponseEntity<Void> delete(@PathVariable Long id) 
+	{
 		//metodo para deletar, não vai retornar nenhum body
 		service.delete(id); //serviço chama o metodo delete do UserService
 		return ResponseEntity.noContent().build(); //retorna uma resposta vazia, ja tratando 
 		//o codigo 204 - resposta que não tem conteudo
+	}
+	
+	@PutMapping(value = "/{id}") //anotação Rest para atualizar um recurso
+	public ResponseEntity<User> update(@PathVariable Long id, @RequestBody User obj) {
+	//metodo para atualizar um recurso, temo como parametro o Id (que vem da URL) e um
+	//objeto contendo os dados do usuario para atualizar - esse vem do body
+		obj = service.update(id, obj); //chama o metodo para atualizar
+		return ResponseEntity.ok().body(obj); //retorna o objeto atualizado
 	}
 }
