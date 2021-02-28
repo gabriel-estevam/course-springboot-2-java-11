@@ -35,5 +35,10 @@ public class UserService {
 		//metodo para salvar no banco de dados,
 		return repository.save(obj); //retorna o usuário salvo
 	}
+	
+	public void delete(Long id) {
+		//metodo para deletar um usuario do banco de dados pelo seu id
+		repository.deleteById(id);
+	}
 }
 

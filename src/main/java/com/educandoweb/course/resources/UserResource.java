@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -64,5 +65,13 @@ public class UserResource {
 		//detalhe so estamos fazendo a configuração acima pois, para retorna o codigo 201 vamos chamar o metodo created abaixo
 		//essa metodo espera como parametro uma URI
 		return ResponseEntity.created(uri).body(obj); //retorna objeto inserido (body) mais o codigo de inseração 201 (created)
+	}
+	
+	@DeleteMapping(value = "/{id}") //anotação do spring boot para deletar
+	public ResponseEntity<Void> delete(@PathVariable Long id) {
+		//metodo para deletar, não vai retornar nenhum body
+		service.delete(id); //serviço chama o metodo delete do UserService
+		return ResponseEntity.noContent().build(); //retorna uma resposta vazia, ja tratando 
+		//o codigo 204 - resposta que não tem conteudo
 	}
 }
