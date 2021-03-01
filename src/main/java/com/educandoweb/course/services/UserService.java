@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.educandoweb.course.entities.User;
 import com.educandoweb.course.resources.repositories.UserRepository;
+import com.educandoweb.course.services.exceptions.ResourceNotFoundException;
 
 @Service //essa anotação indica que essa classe é uma classe de serviço, assim fica mais semantico e facil de entender
 public class UserService {
@@ -28,7 +29,9 @@ public class UserService {
 	public User findById(Long id) {
 	//metodo para retornar um usuário pelo seu Id	
 		Optional <User> obj = repository.findById(id);
-		return obj.get();
+		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
+		/*mudado o .get para orElseThrow - esse metodo vai lançar uma exceção se não gerar o get
+		 * dentro do metodo passamos uma expressão lambda que instancia a exceção ResourceNotFoundException*/
 	}
 	
 	public User insert(User obj) {
