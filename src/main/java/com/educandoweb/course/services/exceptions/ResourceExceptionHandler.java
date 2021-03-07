@@ -32,4 +32,15 @@ public class ResourceExceptionHandler
 		//status.value porque é uma integer
 		return ResponseEntity.status(status).body(err); //retorna a mensagem de erro no body
 	}
+	
+	@ExceptionHandler(DatabaseException.class)
+	public ResponseEntity<StandardError> database(DatabaseException e, HttpServletRequest request) 
+	{
+	//metodo para tratar exceção com banco de dados, por exemplo quando tenta apagar uma registro, cujo o mesmo esta 
+	//vinculado a outros registro, vai gerar um erro de integridade de dados
+		String error = "Database error";
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+		StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+		return ResponseEntity.status(status).body(err);
+	}
 }

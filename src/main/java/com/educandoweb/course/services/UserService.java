@@ -7,10 +7,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.educandoweb.course.entities.User;
 import com.educandoweb.course.resources.repositories.UserRepository;
+import com.educandoweb.course.services.exceptions.DatabaseException;
 import com.educandoweb.course.services.exceptions.ResourceNotFoundException;
 
 @Service //essa anotação indica que essa classe é uma classe de serviço, assim fica mais semantico e facil de entender
@@ -41,7 +44,26 @@ public class UserService {
 	
 	public void delete(Long id) {
 	//metodo para deletar um usuario do banco de dados pelo seu id
-		repository.deleteById(id);
+	//abaixo estamos tratando a execeção do delete
+		try {
+			repository.deleteById(id);
+		}
+		catch(EmptyResultDataAccessException e) {
+			/*Essa exceção trata quando o id do usuário a ser deletado não existe
+			 * Usado a exceção RuntimeException e o printStackTrace e.printStackTrace();
+			 * para verificar que tipo de erro o hibernete gera, isso é uma tecnica usada
+			 * para descobrir que tipo de erro esta gerando para assim então tratar corretamente,
+			 * descobrimos que a exceção gera é EmptyResultDataAccessException
+			 */
+			throw new ResourceNotFoundException(id); //lança a exceção de recuros não encontrado
+		}
+		catch(DataIntegrityViolationException e) {
+			/* essa exceção trata quando o id do usuário esta associado com outros registros no banco de dados
+			que é o erro de integridade e.printStackTrace(), indentificado que a exceção gerada é 
+			o DataIntegrityViolationException exceção do Spring para lançar essa exceção foi necessário 
+			criar uma classe (personalizada) para tratar de erro de integridade de dados */
+			throw new DatabaseException(e.getMessage()); //lança a exceção de erro com o banco de dados
+		}
 	}
 	
 	public User update(Long id, User obj) {
