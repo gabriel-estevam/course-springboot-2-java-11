@@ -6,6 +6,8 @@ package com.educandoweb.course.services; //camada de serviço, criamos essa cama
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -68,12 +70,19 @@ public class UserService {
 	
 	public User update(Long id, User obj) {
 	//Metodo para atualizar um usuario, tem como parametro um id e um objeto do tipo User
-		User entity = repository.getOne(id); /*declarado essa variavel que sera nossa entidade
+	//Abaixo estamos tratando o metodo, nesse caso ele vai tratar quando o id do usuario não existe
+		try {
+			User entity = repository.getOne(id); /*declarado essa variavel que sera nossa entidade
 		monitorada pelo JPA, recebe o repositoy.getOne(id) que chama a função getOne - esse metodo
 		instancia um usuário, porem ele não acessa o banco de dados ainda, isto é ele vai deixar
 		um objeto JPA monitorando, e em seguida efetuar uma operação com o banco de dados*/
-		updateData(entity, obj); //função para atualizar os dados do entity
-		return repository.save(entity); //salva o objeto
+			updateData(entity, obj); //função para atualizar os dados do entity
+			return repository.save(entity); //salva o objeto
+		}
+		catch(EntityNotFoundException e) {
+			//e.printStackTrace(); exceção encontrada foi o EntityNotFoundException do javax.persistence
+			throw new ResourceNotFoundException(id);
+		}
 	}
 
 	private void updateData(User entity, User obj) {
